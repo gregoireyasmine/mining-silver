@@ -1,16 +1,17 @@
 import pickle
 from tqdm import tqdm
-from snpe_utils import sample_for_observation
-from two_step_utils import simulate_two_step, two_step_sampling_from_obs
+from ..utils.snpe_utils import sample_for_observation
+from ..utils.two_step_utils import simulate_two_step, two_step_sampling_from_obs
+from utils.sliced_wasserstein import sliced_wasserstein_distance  # credit to Mackelab github
 from two_moons import from_means, mean_function
 from sbi.utils import BoxUniform
 import torch
 from sbi.utils.metrics import c2st
-from sliced_wasserstein import sliced_wasserstein_distance  # credit to Mackelab github
 import numpy as np
 import os
 
-print(os.getcwd())
+# TODO -> parallelize  & edit path & check sim budget + add other rounds
+ROOT = os.getcwd() + '/..'
 NUM_OBS = 100  # Number of x_o to average posterior distributions distances on
 NUM_SAMPLES = 1000  # Number of samples to compute the
 SIM_BUDGETS = [10, 20, 50, 75, 100, 200, 300, 500, 1000, 2000, 10000, 100000]
