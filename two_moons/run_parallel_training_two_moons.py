@@ -2,23 +2,27 @@ import multiprocessing
 import subprocess
 import os
 
+os.chdir('../')
+
 # for final results :
-"""
+
 NUM_SIM_FULL = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]
-#NUM_SIM_SMALL = [100, 200, 300, 500, 1000, 2000, 3000, 5000]
-#NUM_TRAINING_FULL = 3
-#NUM_TRAINING_SMALL = 8
-#HUGE_SIM = 100_000
-"""
+NUM_SIM_SMALL = [100, 200, 300, 500, 1000, 2000, 3000, 5000]
+NUM_TRAINING_FULL = 3
+NUM_TRAINING_SMALL = 8
+HUGE_SIM = 100_000
+
 
 # to test script on local :
+"""
 NUM_SIM_FULL = [10, 100]
 NUM_SIM_SMALL = [10]
 NUM_TRAINING_FULL = 1
 NUM_TRAINING_SMALL = 2
 HUGE_SIM = 200
+"""
 
-SCRIPT_TYPES = ["hp_two_moons_train_two_step.py"]#, "hp_two_moons_train_standard.py"]
+SCRIPT_TYPES = ["two_moons/hp_two_moons_train_two_step.py", "two_moons/hp_two_moons_train_standard.py"]
 
 
 def run_script(args):
@@ -47,4 +51,6 @@ if __name__ == "__main__":
 
     pool = multiprocessing.Pool(processes=len(scripts_and_params))
     pool.map(run_script, scripts_and_params)
+
+
 

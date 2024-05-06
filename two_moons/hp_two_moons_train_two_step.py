@@ -1,5 +1,6 @@
 import argparse
 import os
+print(os.getcwd())
 import pickle
 import time
 from utils.snpe_utils import train_inferer
