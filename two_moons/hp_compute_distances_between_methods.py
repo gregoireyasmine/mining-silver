@@ -10,12 +10,12 @@ import time
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('standard_theta_posterior_name', metavar='std_theta', type=int, help=" pickle filename of the the posterior of theta (standard est.)")
-parser.add_argument('twostep_theta_posterior_name', metavar='2step_theta', type=int, help="pickle filename of the posterior of theta (2step est.)")
-parser.add_argument('twostep_z_posterior_name', metavar='2step_theta', type=int, help="pickle filename of the posterior of z (2step est.)")
+parser.add_argument('standard_theta_posterior_name', metavar='std_theta', type=str, help=" pickle filename of the the posterior of theta (standard est.)")
+parser.add_argument('twostep_theta_posterior_name', metavar='2step_theta', type=str, help="pickle filename of the posterior of theta (2step est.)")
+parser.add_argument('twostep_z_posterior_name', metavar='2step_theta', type=str, help="pickle filename of the posterior of z (2step est.)")
 parser.add_argument('method', metavar='method', type=str, help="""Can be either 'c2st' or 'wasserstein' method""")
-parser.add_argument('num_obs', metavar='n_obs', type=str, help="Number of observations to evaluate posterior on")
-parser.add_argument('num_samples', metavar='n_samples', type=str, help="Number of samples from each evaluated posterior")
+parser.add_argument('num_obs', metavar='n_obs', type=int, help="Number of observations to evaluate posterior on")
+parser.add_argument('num_samples', metavar='n_samples', type=int, help="Number of samples from each evaluated posterior")
 args = parser.parse_args()
 
 STD_THETA_NAME = args.standard_theta_posterior_name

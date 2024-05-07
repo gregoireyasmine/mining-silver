@@ -9,13 +9,13 @@ import time
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('theta_name_1', metavar='theta1', type=int, help="filename of the 1st posterior of theta")
-parser.add_argument('z_name_1', metavar='z1', type=int, help="filename of the 1st posterior of z ")
-parser.add_argument('theta_name_2', metavar='theta2', type=int, help="filename of the 2nd posterior of theta")
-parser.add_argument('z_name_2', metavar='z2', type=int, help="filename of the 2nd posterior of z")
+parser.add_argument('theta_name_1', metavar='theta1', type=str, help="filename of the 1st posterior of theta")
+parser.add_argument('z_name_1', metavar='z1', type=str, help="filename of the 1st posterior of z ")
+parser.add_argument('theta_name_2', metavar='theta2', type=str, help="filename of the 2nd posterior of theta")
+parser.add_argument('z_name_2', metavar='z2', type=str, help="filename of the 2nd posterior of z")
 parser.add_argument('method', metavar='method', type=str, help="""Can be either 'c2st' or 'wasserstein' method""")
-parser.add_argument('num_obs', metavar='n_obs', type=str, help="Number of observations to evaluate posterior on")
-parser.add_argument('num_samples', metavar='n_samples', type=str, help="Number of samples from each evaluated posterior")
+parser.add_argument('num_obs', metavar='n_obs', type=int, help="Number of observations to evaluate posterior on")
+parser.add_argument('num_samples', metavar='n_samples', type=int, help="Number of samples from each evaluated posterior")
 
 args = parser.parse_args()
 
