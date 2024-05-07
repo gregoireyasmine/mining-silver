@@ -34,12 +34,12 @@ def run_script(args):
 if __name__ == "__main__":
     num_processes = NUM_TRAINING_SMALL
     num_sims = NUM_SIM_FULL
+    scripts_and_params = []
 
     for script_type in SCRIPT_TYPES:
-        scripts_and_params = []
 
         for process_id in range(1, num_processes + 1):
-            if process_id >= NUM_TRAINING_FULL:
+            if process_id > NUM_TRAINING_FULL:
                 num_sims = NUM_SIM_SMALL
             for num_sim in num_sims:
 
@@ -49,8 +49,8 @@ if __name__ == "__main__":
         script_and_params = (script_type, f"{HUGE_SIM} {1}")
         scripts_and_params.append(script_and_params)
 
-        pool = multiprocessing.Pool(processes=len(scripts_and_params))
-        pool.map(run_script, scripts_and_params)
+    pool = multiprocessing.Pool(processes=10)
+    pool.map(run_script, scripts_and_params)
 
 
 
