@@ -1,6 +1,11 @@
 # mining-silver
 Code for our group project at 2024 Workshop on Simulation-based Inference
 
+
+# setup :
+adding the path to the project might be necessary  
+export PYTHONPATH=/home/gdegobert/mining-silver:$PYTHONPATH
+
 ## References: 
 ##### SNPE : 
  Papamakarios, George and Murray Iain

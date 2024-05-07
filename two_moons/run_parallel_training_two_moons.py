@@ -2,8 +2,8 @@ import multiprocessing
 import subprocess
 import os
 
-os.chdir('../')
 
+os.chdir('../')
 # for final results :
 
 NUM_SIM_FULL = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]

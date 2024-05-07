@@ -12,7 +12,7 @@ args = parser.parse_args()
 N_SIM = args.sim_number
 ROUND_NB = args.training_round
 
-ROOT = os.getcwd() + '/..'
+ROOT = os.getcwd()
 SIM_PATH = os.path.join(ROOT, 'simulations/two_moons/100000sims_theta_z_x.pickle')
 SAVE_MODEL_DIR = os.path.join(ROOT, 'validation/two_moons')
 if not os.path.exists(SAVE_MODEL_DIR):

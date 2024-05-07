@@ -1,3 +1,6 @@
 /validation/two_moons
 /simulations/two_moons
 /two_moons/sbi-logs
+/jobs/*
+/sbi-logs
+
