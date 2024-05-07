@@ -5,6 +5,7 @@ import os
 import multiprocessing
 import subprocess
 
+os.chdir('../')
 ROOT = os.getcwd()
 DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
 RESULTS_DIR =  os.path.join(ROOT, 'results', 'mean_distances')
