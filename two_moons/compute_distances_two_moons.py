@@ -13,8 +13,9 @@ import os
 # TODO -> parallelize  & edit path & check sim budget + add other rounds
 ROOT = os.getcwd() + '/..'
 NUM_OBS = 100  # Number of x_o to average posterior distributions distances on
-NUM_SAMPLES = 1000  # Number of samples to compute the
-SIM_BUDGETS = [10, 20, 50, 75, 100, 200, 300, 500, 1000, 2000, 10000, 100000]
+NUM_SAMPLES = 5000  # Number of samples to compute the distance
+SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000] # Sim budgets on which inferers were trained
+
 
 theta_prior = BoxUniform(low=torch.tensor([-1.0, -1.0]), high=torch.tensor([1.0, 1.0]))
 

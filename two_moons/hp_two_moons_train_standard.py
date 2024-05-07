@@ -3,6 +3,7 @@ import os
 import pickle
 import time
 from utils.snpe_utils import train_inferer
+import torch
 
 parser = argparse.ArgumentParser()
 
@@ -22,9 +23,10 @@ with open(SIM_PATH, 'rb') as handle:
     all_simulations = pickle.load(handle)
 
 theta_samples, z_samples, x_samples = all_simulations
-
-theta = theta_samples[:N_SIM]
-x = x_samples[:N_SIM]
+tot_sim = theta_samples.shape[0]
+perm = torch.randperm(tot_sim)  # added random permutations so that each inferer is trained on different sims
+theta = theta_samples[perm][:N_SIM]
+x = x_samples[perm][:N_SIM]
 
 
 print(f'round {ROUND_NB} of training standard NPE with simulation budget : {N_SIM} \n')
