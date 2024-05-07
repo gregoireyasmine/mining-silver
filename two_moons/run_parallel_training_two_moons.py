@@ -35,22 +35,22 @@ if __name__ == "__main__":
     num_processes = NUM_TRAINING_SMALL
     num_sims = NUM_SIM_FULL
 
-    scripts_and_params = []
+    for script_type in SCRIPT_TYPES:
+        scripts_and_params = []
 
-    for process_id in range(1, num_processes + 1):
-        if process_id >= NUM_TRAINING_FULL:
-            num_sims = NUM_SIM_SMALL
-        for num_sim in num_sims:
-            for script_type in SCRIPT_TYPES:
+        for process_id in range(1, num_processes + 1):
+            if process_id >= NUM_TRAINING_FULL:
+                num_sims = NUM_SIM_SMALL
+            for num_sim in num_sims:
+
                 script_and_params = (script_type, f"{num_sim} {process_id}")
                 scripts_and_params.append(script_and_params)
 
-    for script_type in SCRIPT_TYPES:
         script_and_params = (script_type, f"{HUGE_SIM} {1}")
         scripts_and_params.append(script_and_params)
 
-    pool = multiprocessing.Pool(processes=len(scripts_and_params))
-    pool.map(run_script, scripts_and_params)
+        pool = multiprocessing.Pool(processes=len(scripts_and_params))
+        pool.map(run_script, scripts_and_params)
 
 
 
