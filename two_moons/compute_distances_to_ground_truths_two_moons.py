@@ -62,7 +62,7 @@ for i, n_sim in enumerate(SIM_BUDGETS):
             script_and_params = ('two_moons/hp_compute_distances_between_methods.py', f"{STD_TRUTH_NAME} {fnm_theta} {fnm_z} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
-pool = multiprocessing.Pool(processes=len(scripts_and_params))
+pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
 for k, ground_truth_name in enumerate([STD_TRUTH_NAME, TSTP_TRUTH_NAME_THETA]):

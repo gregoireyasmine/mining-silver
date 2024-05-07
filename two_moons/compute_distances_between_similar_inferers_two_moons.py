@@ -43,7 +43,7 @@ for i, n_sim in enumerate(SIM_BUDGETS):
                 script_and_params = ('two_moons/hp_compute_distances_twostep.py', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
-pool = multiprocessing.Pool(processes=len(scripts_and_params))
+pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
 for inferer_type in ['std', 'twostep']:

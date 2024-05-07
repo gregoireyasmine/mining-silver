@@ -33,7 +33,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
                 script_and_params = ('two_moons/hp_compute_distances_between_methods.py', f"{std_theta} {twostep_theta} {twostep_z} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
-pool = multiprocessing.Pool(processes=len(scripts_and_params))
+pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
 for method in ['c2st', 'wasserstein']:
