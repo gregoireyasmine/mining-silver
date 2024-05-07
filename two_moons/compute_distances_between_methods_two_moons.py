@@ -25,7 +25,7 @@ def run_script(args):
 scripts_and_params = []
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
     for nb1 in range(1, INFERER_NB[i]+1):
-        for nb2 in range(1, INFERER_NB[i]):
+        for nb2 in range(1, INFERER_NB[i]+1):
             twostep_theta = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
             twostep_z = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
             std_theta = f'round_no_{nb2}_{n_sim}_sim_std_theta_results'
@@ -40,8 +40,8 @@ for method in ['c2st', 'wasserstein']:
     all_distances = []
     for i, n_sim in enumerate(SIM_BUDGETS):
         avg_distances = []
-        for nb1 in range(INFERER_NB[i]):
-            for nb2 in range(nb1+1, INFERER_NB[i]):
+        for nb1 in range(1, INFERER_NB[i]+1):
+            for nb2 in range(1, INFERER_NB[i]+1):
                 fnm_1 = f'round_no_{nb1}_{n_sim}_sim_std_theta_results'
                 fnm_2 = f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results'
                 std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'

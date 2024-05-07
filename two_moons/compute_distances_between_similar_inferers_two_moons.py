@@ -23,17 +23,17 @@ def run_script(args):
 
 
 scripts_and_params = []
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+for i, n_sim in enumerate(SIM_BUDGETS):
     for nb1 in range(1, INFERER_NB[i]+1):
-        for nb2 in range(nb1+1, INFERER_NB[i]):
+        for nb2 in range(nb1+1, INFERER_NB[i]+1):
             filename1 = f'round_no_{nb1}_{n_sim}_sim_std_theta_results'
             filename2 = f'round_no_{nb2}_{n_sim}_sim_std_theta_results'
             for method in ['c2st', 'wasserstein']:
                 script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
-    for nb1 in range(INFERER_NB[i]):
+for i, n_sim in enumerate(SIM_BUDGETS):
+    for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]+1):
             theta_fnm_1 = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
             theta_fnm_2 = f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results'
@@ -51,8 +51,8 @@ for inferer_type in ['std', 'twostep']:
         all_distances = []
         for i, n_sim in enumerate(SIM_BUDGETS):
             avg_distances = []
-            for nb1 in range(INFERER_NB[i]):
-                for nb2 in range(nb1+1, INFERER_NB[i]):
+            for nb1 in range(1, INFERER_NB[i]+1):
+                for nb2 in range(nb1+1, INFERER_NB[i]+1):
                     fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
                     fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
                     std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'

@@ -1,5 +1,4 @@
 import pickle
-from tqdm import tqdm
 import numpy as np
 import os
 import multiprocessing
@@ -28,7 +27,7 @@ def run_script(args):
 
 scripts_and_params = []
 # dist std to std gd truth
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+for i, n_sim in enumerate(SIM_BUDGETS):
     for nb in range(1, INFERER_NB[i]+1):
         fnm = f'round_no_{nb}_{n_sim}_sim_std_theta_results'
         for method in ['c2st', 'wasserstein']:
@@ -37,7 +36,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
 
 
 # dist std to 2step gd truth
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+for i, n_sim in enumerate(SIM_BUDGETS):
     for nb in range(1, INFERER_NB[i]+1):
         fnm = f'round_no_{nb}_{n_sim}_sim_std_theta_results'
         for method in ['c2st', 'wasserstein']:
@@ -46,7 +45,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
 
 
 # dist 2step to 2step gd truth
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+for i, n_sim in enumerate(SIM_BUDGETS):
     for nb in range(1, INFERER_NB[i]+1):
         fnm_theta = f'round_no_{nb}_{n_sim}_sim_twostep_theta_results'
         fnm_z = f'round_no_{nb}_{n_sim}_sim_twostep_z_results'
@@ -55,7 +54,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
             scripts_and_params.append(script_and_params)
 
 # dist 2step to std gd truth
-for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+for i, n_sim in enumerate(SIM_BUDGETS):
     for nb in range(1, INFERER_NB[i]+1):
         fnm_theta = f'round_no_{nb}_{n_sim}_sim_twostep_theta_results'
         fnm_z = f'round_no_{nb}_{n_sim}_sim_twostep_z_results'
@@ -72,7 +71,7 @@ for k, ground_truth_name in enumerate([STD_TRUTH_NAME, TSTP_TRUTH_NAME_THETA]):
             all_distances = []
             for i, n_sim in enumerate(SIM_BUDGETS):
                 avg_distances = []
-                for nb1 in range(INFERER_NB[i]):
+                for nb1 in range(1, INFERER_NB[i]+1):
                     fnm = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
                     if m > k:
                         distance_file = f'{method}_distance_{ground_truth_name}_vs_{fnm}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
