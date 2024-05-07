@@ -24,7 +24,7 @@ def run_script(args):
 
 scripts_and_params = []
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
-    for nb1 in range(INFERER_NB[i]):
+    for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]):
             filename1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_std_theta_results')
             filename2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_std_theta_results')
@@ -34,7 +34,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
 
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
     for nb1 in range(INFERER_NB[i]):
-        for nb2 in range(nb1+1, INFERER_NB[i]):
+        for nb2 in range(nb1+1, INFERER_NB[i]+1):
             theta_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results')
             theta_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results')
             z_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_z_results')
@@ -53,8 +53,8 @@ for inferer_type in ['std', 'twostep']:
             avg_distances = []
             for nb1 in range(INFERER_NB[i]):
                 for nb2 in range(nb1+1, INFERER_NB[i]):
-                    fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results')
-                    fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results')
+                    fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
+                    fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
                     for method in ['c2st', 'wasserstein']:
                         std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
                         with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
