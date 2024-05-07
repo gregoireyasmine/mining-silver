@@ -55,11 +55,10 @@ for inferer_type in ['std', 'twostep']:
                 for nb2 in range(nb1+1, INFERER_NB[i]):
                     fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
                     fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
-                    for method in ['c2st', 'wasserstein']:
-                        std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
-                        with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
-                            distances = pickle.load(handle)
-                            avg_distances.append(np.mean(distances))
+                    std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
+                    with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
+                        distances = pickle.load(handle)
+                    avg_distances.append(np.mean(distances))
             all_distances.append(avg_distances)
         with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_{inferer_type}_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
             pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
