@@ -29,7 +29,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
             filename1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_std_theta_results')
             filename2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_std_theta_results')
             for method in ['c2st', 'wasserstein']:
-                script_and_params = ('hp_compute_distances_standard', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
+                script_and_params = ('two_moons/hp_compute_distances_standard', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
@@ -40,7 +40,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
             z_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_z_results')
             z_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_z_results')
             for method in ['c2st', 'wasserstein']:
-                script_and_params = ('hp_compute_distances_twostep', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
+                script_and_params = ('two_moons/hp_compute_distances_twostep', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
 pool = multiprocessing.Pool(processes=len(scripts_and_params))
