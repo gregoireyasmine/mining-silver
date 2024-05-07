@@ -32,7 +32,6 @@ x = x_samples[perm][:N_SIM]
 print(f'round {ROUND_NB} of training standard NPE with simulation budget : {N_SIM} \n')
 t1 = time.time()
 
-print('theta:', theta, 'x:', x)
 theta_results = train_inferer(theta, x, design='nsf')
 t2 = time.time()
 print(f'standard NPE achieved in {t2 - t1} seconds \n')

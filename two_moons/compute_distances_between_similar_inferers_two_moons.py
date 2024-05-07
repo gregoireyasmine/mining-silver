@@ -1,31 +1,71 @@
 import pickle
 from tqdm import tqdm
-from ..utils.snpe_utils import sample_for_observation
-from ..utils.two_step_utils import simulate_two_step, two_step_sampling_from_obs
-from utils.sliced_wasserstein import sliced_wasserstein_distance  # credit to Mackelab github
-from two_moons import from_means, mean_function
-from sbi.utils import BoxUniform
-import torch
-from sbi.utils.metrics import c2st
 import numpy as np
 import os
+import multiprocessing
+import subprocess
 
-# TODO -> parallelize  & edit path & check sim budget + add other rounds
-ROOT = os.getcwd() + '/..'
+ROOT = os.getcwd()
+DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
+RESULTS_DIR =  os.path.join(ROOT, 'results', 'mean_distances')
+MODELS_DIR = os.path.join(ROOT, 'validation/two_moons')
 NUM_OBS = 100  # Number of x_o to average posterior distributions distances on
 NUM_SAMPLES = 5000  # Number of samples to compute the distance
-SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000] # Sim budgets on which inferers were trained
+SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]  # Sim budgets on which inferers were trained
+INFERER_NB  = [8,   8,   8,   8,   8,    8,    8,    8,    3,     3]  # Corresponding number of trained inferers
 
 
-theta_prior = BoxUniform(low=torch.tensor([-1.0, -1.0]), high=torch.tensor([1.0, 1.0]))
+def run_script(args):
+    python_script, params = args
+    command = f"python {python_script} {params}"
+    subprocess.run(command, shell=True)
 
-mean_c2st_2_methods = []
-mean_wasserstein_2_methods = []
 
-true_thetas, z_obs, x_obs = simulate_two_step(mean_function, from_means, theta_prior, NUM_OBS)
+scripts_and_params = []
+for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+    for nb1 in range(INFERER_NB[i]):
+        for nb2 in range(nb1+1, INFERER_NB[i]):
+            filename1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_std_theta_results')
+            filename2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_std_theta_results')
+            for method in ['c2st', 'wasserstein']:
+                script_and_params = ('hp_compute_distances_standard', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
+            scripts_and_params.append(script_and_params)
+
+for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
+    for nb1 in range(INFERER_NB[i]):
+        for nb2 in range(nb1+1, INFERER_NB[i]):
+            theta_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results')
+            theta_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results')
+            z_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_z_results')
+            z_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_z_results')
+            for method in ['c2st', 'wasserstein']:
+                script_and_params = ('hp_compute_distances_twostep', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
+            scripts_and_params.append(script_and_params)
+
+pool = multiprocessing.Pool(processes=len(scripts_and_params))
+pool.map(run_script, scripts_and_params)
+
+for inferer_type in ['std', 'twostep']:
+    for method in ['c2st', 'wasserstein']:
+        all_distances = []
+        for i, n_sim in enumerate(SIM_BUDGETS):
+            avg_distances = []
+            for nb1 in range(INFERER_NB[i]):
+                for nb2 in range(nb1+1, INFERER_NB[i]):
+                    fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results')
+                    fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results')
+                    for method in ['c2st', 'wasserstein']:
+                        std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
+                        with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
+                            distances = pickle.load(handle)
+                            avg_distances.append(np.mean(distances))
+            all_distances.append(avg_distances)
+        with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_{inferer_type}_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
+            pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
 ## Distribution convergence plots
-
+'''
 for n_sim in tqdm(SIM_BUDGETS):
 
     with open('validation/' + str(n_sim) + '_sim_std_theta_posterior.pickle', 'rb') as handle:
@@ -147,3 +187,4 @@ with open(f'results/mean_std_to_twostep_ground_wasserstein_distances_{NUM_OBS}ob
 
 with open(f'results/mean_std_to_std_ground_wasserstein_distances_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'wb') as handle:
     pickle.dump(mean_std_to_std_ground_wasserstein_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
+'''
