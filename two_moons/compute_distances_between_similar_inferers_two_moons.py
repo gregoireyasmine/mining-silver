@@ -26,8 +26,8 @@ scripts_and_params = []
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
     for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]):
-            filename1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_std_theta_results')
-            filename2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_std_theta_results')
+            filename1 = f'round_no_{nb1}_{n_sim}_sim_std_theta_results'
+            filename2 = f'round_no_{nb2}_{n_sim}_sim_std_theta_results'
             for method in ['c2st', 'wasserstein']:
                 script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
@@ -35,10 +35,10 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
 for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
     for nb1 in range(INFERER_NB[i]):
         for nb2 in range(nb1+1, INFERER_NB[i]+1):
-            theta_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results')
-            theta_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results')
-            z_fnm_1 = os.path.join(MODELS_DIR, f'round_no_{nb1}_{n_sim}_sim_twostep_z_results')
-            z_fnm_2 = os.path.join(MODELS_DIR, f'round_no_{nb2}_{n_sim}_sim_twostep_z_results')
+            theta_fnm_1 = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
+            theta_fnm_2 = f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results'
+            z_fnm_1 = f'round_no_{nb1}_{n_sim}_sim_twostep_z_results'
+            z_fnm_2 = f'round_no_{nb2}_{n_sim}_sim_twostep_z_results'
             for method in ['c2st', 'wasserstein']:
                 script_and_params = ('two_moons/hp_compute_distances_twostep.py', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
