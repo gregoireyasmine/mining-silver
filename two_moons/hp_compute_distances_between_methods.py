@@ -1,12 +1,12 @@
 import argparse
 import os
-from tqdm import tqdm
 from utils.snpe_utils import sample_for_observation
 from utils.two_step_utils import two_step_sampling_from_obs
 from utils.sliced_wasserstein import sliced_wasserstein_distance  # credit to Mackelab github
 import torch
 from sbi.utils.metrics import c2st
 import pickle
+import time
 
 parser = argparse.ArgumentParser()
 
@@ -50,9 +50,10 @@ path_to_tstp_z = os.path.join(MODEL_DIR, TSTP_Z_NAME+'.pickle')
 with open(path_to_tstp_z, 'rb') as handle:
     _, _, tstp_z = pickle.load(handle)
 
+t1 = time.time()
 distances = []
 
-for k in tqdm(range(NUM_OBS)):
+for k in range(NUM_OBS):
     x_o = x_obs[k]
     std_post_samples = sample_for_observation(std_theta, x_o, n_post_samples=NUM_SAMPLES)
     _, twostep_post_samples = two_step_sampling_from_obs(tstp_z, tstp_theta, x_o, int(NUM_SAMPLES**0.5)+1, int(NUM_SAMPLES**0.5)+1)
@@ -61,6 +62,9 @@ for k in tqdm(range(NUM_OBS)):
         distances.append(c2st(twostep_post_samples, std_post_samples))
     else:
         distances.append(sliced_wasserstein_distance(twostep_post_samples, std_post_samples))
+
+t2 = time.time()
+print(f'computed distances between {TSTP_THETA_NAME} and {STD_THETA_NAME} in {t2-t1} s')
 
 with open(os.path.join(RESULTS_DIR, f'{METHOD}_distance_{STD_THETA_NAME}_vs_{TSTP_THETA_NAME}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
     pickle.dump(distances, handle, protocol=pickle.HIGHEST_PROTOCOL)

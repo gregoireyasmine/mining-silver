@@ -1,6 +1,6 @@
 import argparse
 import os
-from tqdm import tqdm
+import time
 from utils.snpe_utils import sample_for_observation
 from utils.sliced_wasserstein import sliced_wasserstein_distance  # credit to Mackelab github
 from sbi.utils.metrics import c2st
@@ -44,7 +44,8 @@ with open(path_to_theta_2, 'rb') as handle:
 
 distances = []
 
-for k in tqdm(range(NUM_OBS)):
+t1 = time.time()
+for k in range(NUM_OBS):
     x_o = x_obs[k]
     theta1_post_samples = sample_for_observation(theta1, x_o, n_post_samples=NUM_SAMPLES)
     theta2_post_samples = sample_for_observation(theta2, x_o, n_post_samples=NUM_SAMPLES)
@@ -53,6 +54,9 @@ for k in tqdm(range(NUM_OBS)):
         distances.append(c2st(theta1_post_samples, theta2_post_samples))
     else:
         distances.append(sliced_wasserstein_distance(theta1_post_samples, theta2_post_samples))
+
+t2 = time.time()
+print(f'computed distances between {THETA_1_NAME} and {THETA_2_NAME} in {t2-t1} s')
 
 with open(os.path.join(RESULTS_DIR, f'{METHOD}_distance_{THETA_1_NAME}_vs_{THETA_2_NAME}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
     pickle.dump(distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
