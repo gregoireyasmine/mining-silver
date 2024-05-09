@@ -48,7 +48,7 @@ with open(path_to_z_1, 'rb') as handle:
     _, _, z_1 = pickle.load(handle)
 
 path_to_theta_2 = os.path.join(MODEL_DIR, THETA_NAME_2+'.pickle')
-with open(THETA_NAME_2, 'rb') as handle:
+with open(path_to_theta_2, 'rb') as handle:
     _, _, theta_2 = pickle.load(handle)
 
 path_to_z_2 = os.path.join(MODEL_DIR, Z_NAME_2+'.pickle')

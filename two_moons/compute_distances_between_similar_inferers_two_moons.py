@@ -8,7 +8,9 @@ import subprocess
 os.chdir('../')
 ROOT = os.getcwd()
 DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
-RESULTS_DIR =  os.path.join(ROOT, 'results', 'mean_distances')
+RESULTS_DIR = os.path.join(ROOT, 'results', 'mean_distances')
+if not os.path.exists(RESULTS_DIR):
+    os.makedirs(RESULTS_DIR)
 MODELS_DIR = os.path.join(ROOT, 'validation/two_moons')
 NUM_OBS = 10  # Number of x_o to average posterior distributions distances on
 NUM_SAMPLES = 500  # Number of samples to compute the distance
@@ -46,7 +48,7 @@ for i, n_sim in enumerate(SIM_BUDGETS):
 pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
-for inferer_type in ['std', 'twostep']:
+for inferer_type in ['standard', 'twostep']:
     for method in ['c2st', 'wasserstein']:
         all_distances = []
         for i, n_sim in enumerate(SIM_BUDGETS):
