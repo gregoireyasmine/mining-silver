@@ -28,12 +28,14 @@ scripts_and_params = []
 for i, n_sim in enumerate(SIM_BUDGETS):
     for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]+1):
-            filename1 = f'round_no_{nb1}_{n_sim}_sim_std_theta_results'
-            filename2 = f'round_no_{nb2}_{n_sim}_sim_std_theta_results'
-            for method in ['c2st', 'wasserstein']:
-                script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
+            filename1 = f'round_no_{nb1}_{n_sim}_sim_standard_theta_results'
+            filename2 = f'round_no_{nb2}_{n_sim}_sim_standard_theta_results'
+            method = 'wasserstein'
+            #for method in ['c2st', 'wasserstein']:
+            script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
 
+'''
 for i, n_sim in enumerate(SIM_BUDGETS):
     for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]+1):
@@ -44,7 +46,7 @@ for i, n_sim in enumerate(SIM_BUDGETS):
             for method in ['c2st', 'wasserstein']:
                 script_and_params = ('two_moons/hp_compute_distances_twostep.py', f"{theta_fnm_1} {z_fnm_1} {theta_fnm_2} {z_fnm_2} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
-
+'''
 pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
