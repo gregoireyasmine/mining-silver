@@ -10,8 +10,8 @@ ROOT = os.getcwd()
 DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
 RESULTS_DIR =  os.path.join(ROOT, 'results', 'mean_distances')
 MODELS_DIR = os.path.join(ROOT, 'validation/two_moons')
-NUM_OBS = 100  # Number of x_o to average posterior distributions distances on
-NUM_SAMPLES = 5000  # Number of samples to compute the distance
+NUM_OBS = 10  # Number of x_o to average posterior distributions distances on
+NUM_SAMPLES = 500  # Number of samples to compute the distance
 SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]  # Sim budgets on which inferers were trained
 INFERER_NB  = [8,   8,   8,   8,   8,    8,    8,    8,    3,     3]  # Corresponding number of trained inferers
 
@@ -56,9 +56,12 @@ for inferer_type in ['std', 'twostep']:
                     fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
                     fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
                     std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
-                    with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
-                        distances = pickle.load(handle)
-                    avg_distances.append(np.mean(distances))
+                    if os.path.exists(os.path.join(DISTANCES_DIR, std_distance_file)):
+                        with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
+                            distances = pickle.load(handle)
+                        avg_distances.append(np.mean(distances))
+                    else:
+                        print(f'file {os.path.join(DISTANCES_DIR, std_distance_file)} doesnt exist')
             all_distances.append(avg_distances)
         with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_{inferer_type}_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
             pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
