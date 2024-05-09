@@ -23,8 +23,8 @@ TSTP_THETA_NAME = args.twostep_theta_posterior_name
 TSTP_Z_NAME = args.twostep_z_posterior_name
 METHOD = args.method
 
-NUM_OBS = 100  # Number of "x observed" to average posterior distributions distances on
-NUM_SAMPLES = 1000  # Number of samples used to estimate the distribution
+NUM_OBS = args.num_obs  # Number of "x observed" to average posterior distributions distances on
+NUM_SAMPLES = args.num_samples  # Number of samples used to estimate the distribution
 
 ROOT = os.getcwd()
 MODEL_DIR = os.path.join(ROOT, 'validation', 'two_moons')
