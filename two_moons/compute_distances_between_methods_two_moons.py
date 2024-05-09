@@ -27,7 +27,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
     for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(1, INFERER_NB[i]+1):
             twostep_theta = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
-            twostep_z = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
+            twostep_z = f'round_no_{nb1}_{n_sim}_sim_twostep_z_results'
             std_theta = f'round_no_{nb2}_{n_sim}_sim_standard_theta_results'
             #for method in ['c2st', 'wasserstein']:
             method = 'wasserstein'
