@@ -124,7 +124,7 @@ true_theta, true_z, x_o = simulate_two_step(mean_function, from_means, theta_pri
 
 for n_sim in SIM_BUDGETS:
     try:
-        with open('validation/round_no_1_' + str(n_sim) + '_sim_standard_theta_posterior.pickle', 'rb') as handle:
+        with open('/~/mining-silver/validation/two_moons/round_no_1_' + str(n_sim) + '_sim_standard_theta_posterior.pickle', 'rb') as handle:
             _, _, std_theta_posterior = pickle.load(handle)
 
         standard_samples = sample_for_observation(std_theta_posterior, x_o, n_post_samples=1_000_000)
@@ -138,10 +138,10 @@ for n_sim in SIM_BUDGETS:
         print(f'file round_no_1_{n_sim}_sim_standard_theta_posterior.pickle not found')
 
     try:
-        with open('validation/round_no_1' + str(n_sim) + '_sim_twostep_z_posterior.pickle', 'rb') as handle:
+        with open('/~/mining-silver/validation/two_moons/round_no_1' + str(n_sim) + '_sim_twostep_z_posterior.pickle', 'rb') as handle:
             twostep_z_posterior = pickle.load(handle)
 
-        with open('validation/round_no_1' + str(n_sim) + '_sim_twostep_theta_posterior.pickle', 'rb') as handle:
+        with open('/~/mining-silver/validation/two_moons/round_no_1' + str(n_sim) + '_sim_twostep_theta_posterior.pickle', 'rb') as handle:
             twostep_theta_posterior = pickle.load(handle)
 
         twostep_samples = two_step_sampling_from_obs(twostep_z_posterior, twostep_theta_posterior, x_o, 1000, 1000)
