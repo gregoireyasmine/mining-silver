@@ -28,7 +28,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
         for nb2 in range(1, INFERER_NB[i]+1):
             twostep_theta = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
             twostep_z = f'round_no_{nb1}_{n_sim}_sim_twostep_theta_results'
-            std_theta = f'round_no_{nb2}_{n_sim}_sim_std_theta_results'
+            std_theta = f'round_no_{nb2}_{n_sim}_sim_standard_theta_results'
             for method in ['c2st', 'wasserstein']:
                 script_and_params = ('two_moons/hp_compute_distances_between_methods.py', f"{std_theta} {twostep_theta} {twostep_z} {method} {NUM_OBS} {NUM_SAMPLES}")
             scripts_and_params.append(script_and_params)
@@ -42,12 +42,13 @@ for method in ['c2st', 'wasserstein']:
         avg_distances = []
         for nb1 in range(1, INFERER_NB[i]+1):
             for nb2 in range(1, INFERER_NB[i]+1):
-                fnm_1 = f'round_no_{nb1}_{n_sim}_sim_std_theta_results'
+                fnm_1 = f'round_no_{nb1}_{n_sim}_sim_standard_theta_results'
                 fnm_2 = f'round_no_{nb2}_{n_sim}_sim_twostep_theta_results'
                 std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
-                with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
-                    distances = pickle.load(handle)
-                avg_distances.append(np.mean(distances))
+                if os.path.exists(os.path.join(DISTANCES_DIR, std_distance_file)):
+                    with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
+                        distances = pickle.load(handle)
+                    avg_distances.append(np.mean(distances))
         all_distances.append(avg_distances)
     with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_two_methods_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
         pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
