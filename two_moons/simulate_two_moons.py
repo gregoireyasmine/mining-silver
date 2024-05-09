@@ -19,7 +19,7 @@ with open(SIMULATIONS_DIR+f'/{SIM_NUMBER}sims_theta_z_x.pickle', 'wb') as handle
     pickle.dump((theta, z_sim, x_sim), handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-SIM_NUMBER = 100  # sims used for validation
+SIM_NUMBER = 10  # sims used for validation
 
 if not os.path.exists(SIMULATIONS_DIR):
     os.makedirs(SIMULATIONS_DIR)
