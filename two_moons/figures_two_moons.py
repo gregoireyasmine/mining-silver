@@ -20,7 +20,7 @@ if not os.path.exists(FIG_DIR):
     os.makedirs(FIG_DIR)
 
 
-## Figure 1: evaluate distances between two methods over simulation budgets
+## Figure 1: evaluate distances between two methods over simulation budgets, or within a method
 
 # c2st_between_methods_file = os.path.join(RESULTS_DIR)
 # with open(RESULTS_DIR + f'/mean_c2st_distance_between_methods_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
@@ -29,29 +29,55 @@ if not os.path.exists(FIG_DIR):
 with open(RESULTS_DIR + f'/mean_wasserstein_distances_between_two_methods_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
     mean_wasserstein_2_methods = pickle.load(handle)
 
-print(mean_wasserstein_2_methods)
 mean_across_rounds_wass_2_methods = []
 for dist in mean_wasserstein_2_methods:
     if len(dist) > 0:
         mean_across_rounds_wass_2_methods.append(np.mean(dist))
     else:
         mean_across_rounds_wass_2_methods.append(None)
-print(mean_across_rounds_wass_2_methods)
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 6), sharex=True)
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_between_twostep_inferers_{10}obs_{500}samples.pickle', 'rb') as handle:
+    mean_wasserstein_twostep = pickle.load(handle)
+
+mean_across_rounds_wass_twostep = []
+for dist in mean_wasserstein_twostep:
+    if len(dist) > 0:
+        mean_across_rounds_wass_twostep.append(np.mean(dist))
+    else:
+        mean_across_rounds_wass_twostep.append(None)
+
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_between_standard_inferers_{10}obs_{500}samples.pickle', 'rb') as handle:
+    mean_wasserstein_std = pickle.load(handle)
+
+mean_across_rounds_wass_std = []
+for dist in mean_wasserstein_std:
+    if len(dist) > 0:
+        mean_across_rounds_wass_std.append(np.mean(dist))
+    else:
+        mean_across_rounds_wass_std.append(None)
+
+fig, ax = plt.subplots(1, 3, figsize=(8, 6), sharex=True)
 
 #ax[0].semilogx(SIM_BUDGETS, mean_c2st_2_methods)
 #ax[0].set_title('C2ST distance')
 
-ax.semilogx(SIM_BUDGETS[:-1], mean_across_rounds_wass_2_methods[:-1])
-ax.set_title('Sliced Wasserstein distance')
+ax[0].semilogx(SIM_BUDGETS[:-1], mean_across_rounds_wass_2_methods[:-1])
+ax[0].set_title('Sliced Wasserstein distance')
+ax[0].set_xlabel('Number of simulations')
+ax[0].set_ylabel('Wasserstein distance')
 
-ax.set_xlabel('Number of simulations')
-#ax[1].set_xlabel('Number of simulations')
-#ax[0].set_ylabel('accuracy')
-ax.set_ylabel('Wasserstein distance')
+ax[1].semilogx(SIM_BUDGETS[:-1], mean_across_rounds_wass_std[:-1])
+ax[1].set_title('Sliced Wasserstein distance')
+ax[1].set_xlabel('Number of simulations')
+ax[1].set_ylabel('Wasserstein distance')
 
-#ax.set_ylim(0.5, 0.99)
+ax[2].semilogx(SIM_BUDGETS[:-1], mean_across_rounds_wass_twostep[:-1])
+ax[2].set_title('Sliced Wasserstein distance')
+ax[2].set_xlabel('Number of simulations')
+ax[2].set_ylabel('Wasserstein distance')
+
+
+
 fig.suptitle('Distance between posteriors, averaged over observations')
 
 plt.tight_layout()
@@ -129,7 +155,7 @@ plt.savefig(FIG_DIR + f'/distances/distance_to_standard_limit_{NUM_OBS}_obs_{NUM
 '''
 
 ## TODO: Figure 3 : plot distributions
-
+"""
 theta_prior = BoxUniform(low=torch.tensor([-1.0, -1.0]), high=torch.tensor([1.0, 1.0]))
 true_theta, true_z, x_o = simulate_two_step(mean_function, from_means, theta_prior, 1)
 
@@ -178,3 +204,4 @@ for n_sim in SIM_BUDGETS:
     except Exception:
         print(f'file round_no_1_{n_sim}_sim_twostep_theta_posterior.pickle not found')
         print(MODEL_DIR+'/round_no_1' + str(n_sim) + '_sim_twostep_z_posterior.pickle')
+"""
