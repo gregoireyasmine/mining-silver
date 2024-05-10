@@ -8,7 +8,7 @@ import os
 SIM_NUMBER = 100_000  # how many sims to run
 ROOT = os.getcwd() + '/..'
 SIMULATIONS_DIR = os.path.join(ROOT, 'simulations/two_moons')
-
+"""
 if not os.path.exists(SIMULATIONS_DIR):
     os.makedirs(SIMULATIONS_DIR)
 
@@ -17,7 +17,7 @@ theta, z_sim, x_sim = simulate_two_step(mean_function, from_means, theta_prior, 
 
 with open(SIMULATIONS_DIR+f'/{SIM_NUMBER}sims_theta_z_x.pickle', 'wb') as handle:
     pickle.dump((theta, z_sim, x_sim), handle, protocol=pickle.HIGHEST_PROTOCOL)
-
+"""
 
 SIM_NUMBER = 10  # sims used for validation
 

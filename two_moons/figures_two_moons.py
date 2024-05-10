@@ -6,49 +6,60 @@ from two_moons import from_means, mean_function
 from sbi.utils import BoxUniform
 import torch
 import os
+import numpy as np
 from sbi import analysis as analysis
 
-SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000]
-NUM_OBS = 100
-NUM_SAMPLES = 1000
+SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]
+NUM_OBS = 10
+NUM_SAMPLES = 500
 ROOT = os.getcwd() + '/..'
-RESULTS_DIR = os.path.join(ROOT, 'results')
+RESULTS_DIR = os.path.join(ROOT, 'results/mean_distances')
+MODEL_DIR = os.path.join(ROOT, 'validation/two_moons')
 FIG_DIR = os.path.join(ROOT, 'figures')
 if not os.path.exists(FIG_DIR):
     os.makedirs(FIG_DIR)
 
-'''
+
 ## Figure 1: evaluate distances between two methods over simulation budgets
 
 # c2st_between_methods_file = os.path.join(RESULTS_DIR)
 # with open(RESULTS_DIR + f'/mean_c2st_distance_between_methods_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
 #    mean_c2st_2_methods = pickle.load(handle)
 
-with open(RESULTS_DIR + f'/mean_wasserstein_distance_between_methods_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_between_two_methods_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
     mean_wasserstein_2_methods = pickle.load(handle)
+
+print(mean_wasserstein_2_methods)
+mean_across_rounds_wass_2_methods = []
+for dist in mean_wasserstein_2_methods:
+    if len(dist) > 0:
+        mean_across_rounds_wass_2_methods.append(np.mean(dist))
+    else:
+        mean_across_rounds_wass_2_methods.append(None)
+print(mean_across_rounds_wass_2_methods)
 
 fig, ax = plt.subplots(1, 1, figsize=(8, 6), sharex=True)
 
 #ax[0].semilogx(SIM_BUDGETS, mean_c2st_2_methods)
 #ax[0].set_title('C2ST distance')
 
-ax[0].semilogx(SIM_BUDGETS, mean_wasserstein_2_methods)
-ax[0].set_title('Sliced Wasserstein distance')
+ax.semilogx(SIM_BUDGETS[:-1], mean_across_rounds_wass_2_methods[:-1])
+ax.set_title('Sliced Wasserstein distance')
 
-ax[0].set_xlabel('Number of simulations')
+ax.set_xlabel('Number of simulations')
 #ax[1].set_xlabel('Number of simulations')
 #ax[0].set_ylabel('accuracy')
-ax[0].set_ylabel('Wasserstein distance')
+ax.set_ylabel('Wasserstein distance')
 
-ax[0].set_ylim(0.5, 0.99)
+#ax.set_ylim(0.5, 0.99)
 fig.suptitle('Distance between posteriors, averaged over observations')
 
 plt.tight_layout()
-plt.savefig(FIG_DIR + f'/distances/distance_between_methods_{NUM_OBS}_obs_{NUM_SAMPLES}_samples')
+plt.savefig(FIG_DIR + f'/distance_between_methods_{NUM_OBS}_obs_{NUM_SAMPLES}_samples')
 
 
 ## Figure 2: evaluate distances between method and standard ground truth
-
+'''
 with open(RESULTS_DIR + f'/mean_twostep_to_twostep_ground_c2st_distances_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle', 'rb') as handle:
     twostep_twostep_c2st = pickle.load(handle)
 
@@ -115,34 +126,40 @@ fig.suptitle('Distance to ground truth (standard), averaged over observations')
 
 plt.tight_layout()
 plt.savefig(FIG_DIR + f'/distances/distance_to_standard_limit_{NUM_OBS}_obs_{NUM_SAMPLES}_samples')
+'''
 
 ## TODO: Figure 3 : plot distributions
-'''
 
 theta_prior = BoxUniform(low=torch.tensor([-1.0, -1.0]), high=torch.tensor([1.0, 1.0]))
 true_theta, true_z, x_o = simulate_two_step(mean_function, from_means, theta_prior, 1)
 
 for n_sim in SIM_BUDGETS:
+    for i in range(1, 9):
+        try:
+            with open(MODEL_DIR+f'/round_no_{i}_{n_sim}_sim_standard_theta_results.pickle', 'rb') as handle:
+                _, _, std_theta_posterior = pickle.load(handle)
+                break
+        except FileNotFoundError:
+            if i == 8:
+                print(MODEL_DIR+f'/round_no_{i}_{n_sim}_sim_standard_theta_results.pickle')
+
+    standard_samples = sample_for_observation(std_theta_posterior, x_o, n_post_samples=1_000_000)
+
+    plt.figure()
+    analysis.pairplot(standard_samples, points=true_theta, limits=[[-1, 1], [-1, 1]], figsize=(6, 6),
+                      labels=[r"$\theta_1$", r"$\theta_2$"], upper='kde')
+    plt.savefig(os.path.join(FIG_DIR, f'{n_sim}_sim_standard_theta_posterior_plot.png'))
+    plt.close()
+
+    #except Exception:
+    #    print(f'file round_no_1_{n_sim}_sim_standard_theta_posterior.pickle not found')
+
     try:
-        with open('/~/mining-silver/validation/two_moons/round_no_1_' + str(n_sim) + '_sim_standard_theta_posterior.pickle', 'rb') as handle:
-            _, _, std_theta_posterior = pickle.load(handle)
+        with open(MODEL_DIR+'/round_no_1_' + str(n_sim) + '_sim_twostep_z_results.pickle', 'rb') as handle:
+            _,_,twostep_z_posterior = pickle.load(handle)
 
-        standard_samples = sample_for_observation(std_theta_posterior, x_o, n_post_samples=1_000_000)
-
-        plt.figure()
-        analysis.pairplot(standard_samples, points=true_theta, limits=[[-1, 1], [-1, 1]], figsize=(6, 6),
-                          labels=[r"$\theta_1$", r"$\theta_2$"])
-        plt.savefig(os.path.join(FIG_DIR, f'{n_sim}_sim_standard_theta_posterior_plot'))
-        plt.close()
-    except Exception:
-        print(f'file round_no_1_{n_sim}_sim_standard_theta_posterior.pickle not found')
-
-    try:
-        with open('/~/mining-silver/validation/two_moons/round_no_1' + str(n_sim) + '_sim_twostep_z_posterior.pickle', 'rb') as handle:
-            twostep_z_posterior = pickle.load(handle)
-
-        with open('/~/mining-silver/validation/two_moons/round_no_1' + str(n_sim) + '_sim_twostep_theta_posterior.pickle', 'rb') as handle:
-            twostep_theta_posterior = pickle.load(handle)
+        with open(MODEL_DIR+'/round_no_1_' + str(n_sim) + '_sim_twostep_theta_results.pickle', 'rb') as handle:
+            _,_,twostep_theta_posterior = pickle.load(handle)
 
         twostep_samples = two_step_sampling_from_obs(twostep_z_posterior, twostep_theta_posterior, x_o, 1000, 1000)
         z_twostep_samples = sample_for_observation(twostep_z_posterior, x_o, n_post_samples=1_000_000)
@@ -160,3 +177,4 @@ for n_sim in SIM_BUDGETS:
         plt.close()
     except Exception:
         print(f'file round_no_1_{n_sim}_sim_twostep_theta_posterior.pickle not found')
+        print(MODEL_DIR+'/round_no_1' + str(n_sim) + '_sim_twostep_z_posterior.pickle')
