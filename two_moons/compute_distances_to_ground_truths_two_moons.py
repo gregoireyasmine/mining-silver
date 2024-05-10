@@ -77,9 +77,10 @@ for k, ground_truth_name in enumerate([STD_TRUTH_NAME, TSTP_TRUTH_NAME_THETA]):
                         distance_file = f'{method}_distance_{ground_truth_name}_vs_{fnm}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
                     else:
                         distance_file = f'{method}_distance_{fnm}_vs_{ground_truth_name}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
-                    with open(os.path.join(DISTANCES_DIR, distance_file), 'rb') as handle:
-                        distances = pickle.load(handle)
-                    avg_distances.append(np.mean(distances))
+                    if os.path.exists((os.path.join(DISTANCES_DIR, distance_file))):
+                        with open(os.path.join(DISTANCES_DIR, distance_file), 'rb') as handle:
+                            distances = pickle.load(handle)
+                        avg_distances.append(np.mean(distances))
                 all_distances.append(avg_distances)
             with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_{inferer_type}_inferers_to_{ground_truth_name}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
                 pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
