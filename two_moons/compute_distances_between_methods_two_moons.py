@@ -11,7 +11,7 @@ DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
 RESULTS_DIR = os.path.join(ROOT, 'results', 'mean_distances')
 MODELS_DIR = os.path.join(ROOT, 'validation/two_moons')
 NUM_OBS = 10  # Number of x_o to average posterior distributions distances on
-NUM_SAMPLES = 2000  # Number of samples to compute the distance
+NUM_SAMPLES = 10000  # Number of samples to compute the distance
 SIM_BUDGETS = [100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000]  # Sim budgets on which inferers were trained
 INFERER_NB  = [3,   3,   3,   3,   3,    3,    3,    3,    3,     3]  # Corresponding number of trained inferers (reduced everything to 3)
 
