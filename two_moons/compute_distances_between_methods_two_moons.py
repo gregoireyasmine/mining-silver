@@ -36,6 +36,7 @@ for i, n_sim in tqdm(enumerate(SIM_BUDGETS)):
 pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
+'''
 for method in ['c2st', 'wasserstein']:
     all_distances = []
     for i, n_sim in enumerate(SIM_BUDGETS):
@@ -52,3 +53,4 @@ for method in ['c2st', 'wasserstein']:
         all_distances.append(avg_distances)
     with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_two_methods_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
         pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
+'''

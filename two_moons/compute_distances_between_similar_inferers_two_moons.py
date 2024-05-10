@@ -28,13 +28,13 @@ scripts_and_params = []
 for i, n_sim in enumerate(SIM_BUDGETS):
     for nb1 in range(1, INFERER_NB[i]+1):
         for nb2 in range(nb1+1, INFERER_NB[i]+1):
-            for method in ['c2st', 'wasserstein']:
-                filename1 = f'round_no_{nb1}_{n_sim}_sim_standard_theta_results'
-                filename2 = f'round_no_{nb2}_{n_sim}_sim_standard_theta_results'
-                method = 'wasserstein'
-                #for method in ['c2st', 'wasserstein']:
-                script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
-                scripts_and_params.append(script_and_params)
+            #for method in ['c2st', 'wasserstein']:
+            filename1 = f'round_no_{nb1}_{n_sim}_sim_standard_theta_results'
+            filename2 = f'round_no_{nb2}_{n_sim}_sim_standard_theta_results'
+            method = 'c2st'
+            #for method in ['c2st', 'wasserstein']:
+            script_and_params = ('two_moons/hp_compute_distances_standard.py', f"{filename1} {filename2} {method} {NUM_OBS} {NUM_SAMPLES}")
+            scripts_and_params.append(script_and_params)
 
 '''
 for i, n_sim in enumerate(SIM_BUDGETS):
@@ -51,22 +51,23 @@ for i, n_sim in enumerate(SIM_BUDGETS):
 pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
-for inferer_type in ['standard', 'twostep']:
-    method='wasserstein'
-    all_distances = []
-    for i, n_sim in enumerate(SIM_BUDGETS):
-        avg_distances = []
-        for nb1 in range(1, INFERER_NB[i]+1):
-            for nb2 in range(nb1+1, INFERER_NB[i]+1):
-                fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
-                fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
-                std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
-                if os.path.exists(os.path.join(DISTANCES_DIR, std_distance_file)):
-                    with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
-                        distances = pickle.load(handle)
-                    avg_distances.append(np.mean(distances))
-                else:
-                    print(f'file {os.path.join(DISTANCES_DIR, std_distance_file)} doesnt exist')
-        all_distances.append(avg_distances)
-    with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_{inferer_type}_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
-        pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
+for method in ['wasserstein', 'c2st']:
+    for inferer_type in ['standard', 'twostep']:
+        all_distances = []
+        for i, n_sim in enumerate(SIM_BUDGETS):
+            avg_distances = []
+            for nb1 in range(1, INFERER_NB[i]+1):
+                for nb2 in range(nb1+1, INFERER_NB[i]+1):
+
+                        fnm_1 = f'round_no_{nb1}_{n_sim}_sim_{inferer_type}_theta_results'
+                        fnm_2 = f'round_no_{nb2}_{n_sim}_sim_{inferer_type}_theta_results'
+                        std_distance_file = f'{method}_distance_{fnm_1}_vs_{fnm_2}_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'
+                        if os.path.exists(os.path.join(DISTANCES_DIR, std_distance_file)):
+                            with open(os.path.join(DISTANCES_DIR, std_distance_file), 'rb') as handle:
+                                distances = pickle.load(handle)
+                            avg_distances.append(np.mean(distances))
+                        else:
+                            print(f'file {os.path.join(DISTANCES_DIR, std_distance_file)} doesnt exist')
+            all_distances.append(avg_distances)
+        with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_{inferer_type}_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
+            pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
