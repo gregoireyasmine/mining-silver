@@ -205,7 +205,7 @@ for n_sim in SIM_BUDGETS:
             if i == 8:
                 print(MODEL_DIR+f'/round_no_{i}_{n_sim}_sim_standard_theta_results.pickle not Found')
 """
-
+'''
 with open(MODEL_DIR + '/round_no_1_' + str(50000) + '_sim_twostep_z_results.pickle', 'rb') as handle:
     _, _, twostep_z_posterior = pickle.load(handle)
 with open(MODEL_DIR + '/round_no_1_' + str(50000) + '_sim_twostep_theta_results.pickle', 'rb') as handle:
@@ -224,3 +224,4 @@ analysis.pairplot(z_twostep_samples, points=true_theta, limits=[[-1, 1], [-1, 1]
                   labels=[r"$z_1$", r"$z_2$"])
 plt.savefig(os.path.join(FIG_DIR, f'{50000}_sim_twostep_z_posterior_plot'))
 plt.close()
+'''
