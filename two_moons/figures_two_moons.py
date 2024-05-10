@@ -72,42 +72,42 @@ plt.savefig(FIG_DIR + f'/distance_between_methods_{NUM_OBS}_obs_{NUM_SAMPLES}_sa
 
 ## Figure 2: evaluate distances between method and standard ground truth
 
-with open(RESULTS_DIR + f'/mean_c2st_distances_standard_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_c2st_distances_standard_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     std_std_c2st = pickle.load(handle)
 print(std_std_c2st)
 std_std_c2st = [np.mean(dist) if len(dist)>0 else None for dist in std_std_c2st]
 
-with open(RESULTS_DIR + f'/mean_c2st_distances_standard_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_c2st_distances_standard_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     std_twostep_c2st = pickle.load(handle)
 
 std_twostep_c2st = [np.mean(dist) if len(dist)>0 else None for dist in std_twostep_c2st]
 
-with open(RESULTS_DIR + f'/mean_c2st_distances_twostep_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_c2st_distances_twostep_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     twostep_std_c2st = pickle.load(handle)
 
 twostep_std_c2st = [np.mean(dist) if len(dist)>0 else None for dist in twostep_std_c2st]
 
-with open(RESULTS_DIR + f'/mean_c2st_distances_twostep_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_c2st_distances_twostep_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     twostep_twostep_c2st = pickle.load(handle)
 
 twostep_twostep_c2st = [np.mean(dist) if len(dist)>0 else None for dist in twostep_twostep_c2st]
 
-with open(RESULTS_DIR + f'/mean_wasserstein_distances_standard_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_standard_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     std_std_wasserstein = pickle.load(handle)
 
 std_std_wasserstein = [np.mean(dist) if len(dist)>0 else None for dist in std_std_wasserstein]
 
-with open(RESULTS_DIR + f'/mean_wasserstein_distances_standard_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_standard_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     std_twostep_wasserstein = pickle.load(handle)
 
 std_twostep_wasserstein = [np.mean(dist) if len(dist)>0 else None for dist in std_twostep_wasserstein]
 
-with open(RESULTS_DIR + f'/mean_wasserstein_distances_twostep_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_twostep_inferers_to_round_no_1_50000_sim_standard_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     twostep_std_wasserstein = pickle.load(handle)
 
 twostep_std_wasserstein = [np.mean(dist) if len(dist)>0 else None for dist in twostep_std_wasserstein]
 
-with open(RESULTS_DIR + f'/mean_wasserstein_distances_twostep_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_2000samples.pickle', 'rb') as handle:
+with open(RESULTS_DIR + f'/mean_wasserstein_distances_twostep_inferers_to_round_no_1_50000_sim_twostep_theta_results_10obs_10000samples.pickle', 'rb') as handle:
     twostep_twostep_wasserstein = pickle.load(handle)
 
 twostep_twostep_wasserstein = [np.mean(dist) if len(dist)>0 else None for dist in twostep_twostep_wasserstein]
@@ -205,4 +205,22 @@ for n_sim in SIM_BUDGETS:
             if i == 8:
                 print(MODEL_DIR+f'/round_no_{i}_{n_sim}_sim_standard_theta_results.pickle not Found')
 """
-    
+
+with open(MODEL_DIR + '/round_no_1_' + str(50000) + '_sim_twostep_z_results.pickle', 'rb') as handle:
+    _, _, twostep_z_posterior = pickle.load(handle)
+with open(MODEL_DIR + '/round_no_1_' + str(50000) + '_sim_twostep_theta_results.pickle', 'rb') as handle:
+    _, _, twostep_theta_posterior = pickle.load(handle)
+
+z_twostep_samples, theta_twostep_samples = two_step_sampling_from_obs(twostep_z_posterior, twostep_theta_posterior, x_o, 1000, 1000)
+
+plt.figure()
+analysis.pairplot(theta_twostep_samples, points=true_theta, limits=[[-1, 1], [-1, 1]], figsize=(10, 10),
+                  labels=[r"$\theta_1$", r"$\theta_2$"])
+plt.savefig(os.path.join(FIG_DIR, f'{50000}_sim_twostep_theta_posterior_plot'))
+plt.close()
+
+plt.figure()
+analysis.pairplot(z_twostep_samples, points=true_theta, limits=[[-1, 1], [-1, 1]], figsize=(10, 10),
+                  labels=[r"$z_1$", r"$z_2$"])
+plt.savefig(os.path.join(FIG_DIR, f'{50000}_sim_twostep_z_posterior_plot'))
+plt.close()

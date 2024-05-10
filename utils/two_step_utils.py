@@ -39,7 +39,7 @@ def simulate_two_step(latent_variables_simulator: Callable,
     lv_prior = BoxUniform(low=lv_samples.min(0)[0], high=lv_samples.max(0)[0])  # We won't use this prior, it's just for preprocessing
     lv_prior, lv_dim, lv_prior_returns_numpy = process_prior(lv_prior)
     from_lv_simulator = process_simulator(from_latent_simulator, lv_prior, prior_returns_numpy)
-    check_sbi_inputs(from_lv_simulator, theta_prior)
+    check_sbi_inputs(from_lv_simulator, lv_prior)
 
     x_samples = from_lv_simulator(lv_samples)
 
@@ -63,7 +63,7 @@ def two_step_sampling_from_obs(lv_posterior: Distribution, theta_posterior: Dist
     lv_posterior_samples = sample_for_observation(lv_posterior, x_obs, num_lv_samples)
     theta_posterior_samples = []
     for z_p in lv_posterior_samples:
-        lv_x_obs = torch.concatenate([z_p, x_obs])
+        lv_x_obs = torch.concatenate([x_obs, z_p])
         theta_posterior_samples.append(sample_for_observation(theta_posterior, lv_x_obs, n_post_samples=num_samples_per_latent))
     theta_posterior_samples = torch.concatenate(theta_posterior_samples)
     return lv_posterior_samples, theta_posterior_samples
