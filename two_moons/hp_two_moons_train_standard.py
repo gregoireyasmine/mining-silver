@@ -22,24 +22,17 @@ if not os.path.exists(SAVE_MODEL_DIR):
 with open(SIM_PATH, 'rb') as handle:
     all_simulations = pickle.load(handle)
 
+theta_samples, z_samples, x_samples = all_simulations
+tot_sim = theta_samples.shape[0]
+perm = torch.randperm(tot_sim)  # added random permutations so that each inferer is trained on different sims
+theta = theta_samples[perm][:N_SIM]
+x = x_samples[perm][:N_SIM]
 
-if not os.path.exists(SAVE_MODEL_DIR+f'/round_no_{ROUND_NB}_{N_SIM}_sim_standard_theta_results.pickle'):
+t1 = time.time()
 
-    theta_samples, z_samples, x_samples = all_simulations
-    tot_sim = theta_samples.shape[0]
-    perm = torch.randperm(tot_sim)  # added random permutations so that each inferer is trained on different sims
-    theta = theta_samples[perm][:N_SIM]
-    x = x_samples[perm][:N_SIM]
+theta_results = train_inferer(theta, x, design='nsf')
+t2 = time.time()
+print(f'standard NPE round no {ROUND_NB}, {N_SIM} sims, achieved in {t2 - t1} seconds \n')
 
-    print(f'round {ROUND_NB} of training standard NPE with simulation budget : {N_SIM} \n')
-    t1 = time.time()
-
-    theta_results = train_inferer(theta, x, design='nsf')
-    t2 = time.time()
-    print(f'standard NPE achieved in {t2 - t1} seconds \n')
-
-    with open(SAVE_MODEL_DIR+f'/round_no_{ROUND_NB}_{N_SIM}_sim_standard_theta_results.pickle', 'wb') as handle:
-        pickle.dump(theta_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-else:
-    print(f'round {ROUND_NB} training standard NPE with simulation budget : {N_SIM}  already exists, passing\n')
+with open(SAVE_MODEL_DIR+f'/round_no_{ROUND_NB}_{N_SIM}_sim_standard_results.pickle', 'wb') as handle:
+    pickle.dump(theta_results, handle, protocol=pickle.HIGHEST_PROTOCOL)

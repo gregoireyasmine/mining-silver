@@ -8,7 +8,7 @@ from sbi.utils.user_input_checks import (
 )
 from torch import Tensor
 from torch.distributions import Distribution, Uniform
-from .snpe_utils import sample_for_observation
+from .snpe_utils import sample_for_observation, train_inferer
 from typing import Callable, List, Optional
 
 
@@ -63,9 +63,14 @@ def two_step_sampling_from_obs(lv_posterior: Distribution, theta_posterior: Dist
     lv_posterior_samples = sample_for_observation(lv_posterior, x_obs, num_lv_samples)
     theta_posterior_samples = []
     for z_p in lv_posterior_samples:
-        lv_x_obs = torch.concatenate([x_obs, z_p])
+        lv_x_obs = torch.concatenate([z_p, x_obs])
         theta_posterior_samples.append(sample_for_observation(theta_posterior, lv_x_obs, n_post_samples=num_samples_per_latent))
     theta_posterior_samples = torch.concatenate(theta_posterior_samples)
     return lv_posterior_samples, theta_posterior_samples
 
+
+def train_two_step_inferer(theta_samples, lv_samples, x_samples, design='nsf'):
+    z_results = train_inferer(lv_samples, x_samples, design='nsf')
+    theta_results = train_inferer(theta_samples, torch.concatenate([lv_samples, x_samples], dim=1), design='nsf')
+    return z_results, theta_results
 

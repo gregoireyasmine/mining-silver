@@ -4,7 +4,7 @@ import numpy as np
 import os
 import multiprocessing
 import subprocess
-'''
+
 os.chdir('../')
 ROOT = os.getcwd()
 DISTANCES_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
@@ -53,3 +53,4 @@ for method in ['c2st', 'wasserstein']:
         all_distances.append(avg_distances)
     with open(os.path.join(RESULTS_DIR, f'mean_{method}_distances_between_two_methods_inferers_{NUM_OBS}obs_{NUM_SAMPLES}samples.pickle'), 'wb') as handle:
         pickle.dump(all_distances, handle, protocol=pickle.HIGHEST_PROTOCOL)
+'''
