@@ -10,6 +10,9 @@ def train_inferer(prior_samples: Tensor, outputs: Tensor, design: str = 'nsf'):
         prior_samples : Tensor of prior samples
         outputs : Tensor of corresponding simulator outputs
         design : The density estimator architecture to use (see SBI documentation).
+
+    Returns :
+        (inference, density_estimator, posterior) : results of the posterior estimation process
     """
     inference = SNPE(density_estimator=design)
     inference = inference.append_simulations(prior_samples, outputs)

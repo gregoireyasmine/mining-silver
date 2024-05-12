@@ -37,7 +37,8 @@ pool = multiprocessing.Pool(processes=10)
 pool.map(run_script, scripts_and_params)
 
 '''
-for method in ['c2st', 'wasserstein']:
+for met
+hod in ['c2st', 'wasserstein']:
     all_distances = []
     for i, n_sim in enumerate(SIM_BUDGETS):
         avg_distances = []

@@ -15,6 +15,7 @@ def sliced_wasserstein_distance(
 ):
     """
     Sliced Wasserstein distance between encoded samples and distribution samples
+    from https://github.com/mackelab/labproject/blob/main/labproject/metrics/sliced_wasserstein.py
 
     Args:
         encoded_samples (torch.Tensor): tensor of encoded training samples
@@ -24,7 +25,7 @@ def sliced_wasserstein_distance(
         device (torch.device): torch device 'cpu' or 'cuda' gpu
 
     Return:
-        torch.Tensor: Tensor of wasserstein distances of size (num_projections, 1)
+        torch.Tensor: Sliced wassersten distance value
     """
 
     embedding_dim = distribution_samples.size(-1)
