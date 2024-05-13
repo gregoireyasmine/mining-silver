@@ -14,7 +14,7 @@ def sample_from_estimator(estimator, obs, n_samples):
         return theta_samples
 
 
-def dist_for_obs(estimator1, estimator2, method, obs, num_samples, num_projections, n_folds):
+def dist_for_obs(estimator1, estimator2, method, obs, num_samples, num_projections=50, n_folds=5):
     theta_samples_1 = sample_from_estimator(estimator1, obs, num_samples)
     theta_samples_2 = sample_from_estimator(estimator2, obs, num_samples)
     if method == 'c2st':
@@ -25,7 +25,7 @@ def dist_for_obs(estimator1, estimator2, method, obs, num_samples, num_projectio
 
 
 def pe_distance(estimator1: tuple, estimator2: tuple, method, observations,
-                num_samples=5000, num_projections=None, p=None, n_folds=None, max_parallel=4):
+                num_samples=5000, num_projections=50, p=None, n_folds=5):
     """
     Evaluates the two posteriors for a given number of observations, sample and compute
     an empirical metric of similarity between distribution
