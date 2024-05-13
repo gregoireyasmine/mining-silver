@@ -16,7 +16,7 @@ parser.add_argument('name2', metavar='n2', type=str, help="pickle filename of th
 parser.add_argument('method', metavar='method', type=str, help="""Can be either 'c2st' or 'wasserstein' method""")
 parser.add_argument('obs_path', metavar='obs_path', type=int, help="Path to the observations to evaluate posterior on")
 parser.add_argument('num_samples', metavar='n_samples', type=int, help="Number of samples from each evaluated posterior")
-parser.add_argument('save_name', metavar='n_samples', type=str, help="Name of the distance file")
+parser.add_argument('save_name', metavar='savename', type=str, help="Name of the distance file")
 
 args = parser.parse_args()
 
