@@ -11,20 +11,19 @@ import time
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('name1', metavar='n1', type=str, help="pickle filename of the 1st posterior of theta")
-parser.add_argument('name2', metavar='n2', type=str, help="pickle filename of the 2nd posterior of theta")
+parser.add_argument('name1', metavar='n1', type=str, help="pickle filename of the 1st posterior of theta (no suffix)")
+parser.add_argument('name2', metavar='n2', type=str, help="pickle filename of the 2nd posterior of theta (np suffix)")
 parser.add_argument('method', metavar='method', type=str, help="""Can be either 'c2st' or 'wasserstein' method""")
 parser.add_argument('obs_path', metavar='obs_path', type=str, help="Path to the observations to evaluate posterior on")
 parser.add_argument('num_samples', metavar='n_samples', type=int, help="Number of samples from each evaluated posterior")
-parser.add_argument('save_name', metavar='savename', type=str, help="Name of the distance file")
+parser.add_argument('save_name', metavar='savename', type=str, help="Name of the distance file (no suffix)")
 
 args = parser.parse_args()
 
-THETA1_NAME = args.standard_theta_posterior_name
-THETA2_NAME = args.twostep_theta_posterior_name
+THETA1_NAME = args.name1
+THETA2_NAME = args.name2
 METHOD = args.method
 
-NUM_OBS = args.num_obs  # Number of "x observed" to average posterior distributions distances on
 NUM_SAMPLES = args.num_samples  # Number of samples used to estimate the distribution
 
 SAVE_NAME = args.save_name
@@ -32,7 +31,7 @@ SAVE_NAME = args.save_name
 ROOT = os.getcwd()
 MODEL_DIR = os.path.join(ROOT, 'validation', 'two_moons')
 RESULTS_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
-SIM_PATH = os.path.join(ROOT, f'simulations/two_moons/{NUM_OBS}sims_theta_z_x.pickle')
+SIM_PATH = args.obs_path
 
 if not os.path.exists(RESULTS_DIR):
     os.makedirs(RESULTS_DIR)
