@@ -28,7 +28,7 @@ NUM_SAMPLES = args.num_samples  # Number of samples used to estimate the distrib
 
 SAVE_NAME = args.save_name
 
-ROOT = os.getcwd()
+ROOT = '/home/gdegobert/mining-silver/'
 MODEL_DIR = os.path.join(ROOT, 'validation', 'two_moons')
 RESULTS_DIR = os.path.join(ROOT, 'results', 'multi_obs_distances')
 SIM_PATH = args.obs_path
