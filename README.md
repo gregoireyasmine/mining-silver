@@ -7,7 +7,12 @@ For an observation $x$, given the posterior distribution over latent variables $
 
 $$p(\theta|x) = \int p(\theta|z, x)p(z|x) dz$$
 
+
 On the two-moons toy distribution, we use Sequential Posterior Neural Estimation (SNPE) to first infer the latent variable posterior distribution (moon centers), then we infer the posterior distribution over parameters, outperforming the direct SNPE method. 
+
+# results : 
+
+![distance_to_twostep_limit_100_obs_1000_samples](https://github.com/user-attachments/assets/52803a44-6731-48fe-9c01-e26e64bcc333)
 
 # setup :
 adding the path to the project might be necessary  
