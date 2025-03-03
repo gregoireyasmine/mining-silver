@@ -25,3 +25,10 @@ export PYTHONPATH=/path/to/mining-silver:$PYTHONPATH
 
 ##### SBI module: 
   https://sbi-dev.github.io/sbi/
+
+
+##### Mining gold : 
+
+J. Brehmer,G. Louppe,J. Pavez,& K. Cranmer
+Mining gold from implicit models to improve likelihood-free inference
+PNAS 2020
